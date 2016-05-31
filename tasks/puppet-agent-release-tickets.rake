@@ -136,8 +136,8 @@ DOC
   ** Important! These configs *must* be pointing at actual tags, not SHAs!
 
 3) Once the component configs in puppet-agent are verified to be correct, ensure that every component has successfully gone through CI.
-  * First, check https://jenkins.puppetlabs.com/view/All%20in%20One%20Agent/view/Stable/view/Puppet%20Agent%20Daily/ to ensure that the AIO daily job has completed successfully, and that all tests are passing.
-  * Next, check http://kahless.delivery.puppetlabs.net/view/pxp-agent/ to ensure that pxp-agent has passed all tests in CI.
+  * First, check https://jenkins.puppetlabs.com/view/puppet-agent/view/stable/view/puppet-agent/ to ensure that the AIO daily job has completed successfully, and that all tests are passing.
+  * Next, check https://jenkins.puppetlabs.com/view/puppet-agent/view/stable/view/pxp-agent/ to ensure that pxp-agent has passed all tests in CI.
 DOC
 
   description[:release_notes] = <<-DOC
@@ -196,8 +196,9 @@ $ cd puppet-agent
 $ env SSH_VANAGON_KEY=~/.ssh/jenkins bundle exec build puppet-agent el-7-x86_64
 {noformat}
 
-  * If the build succeeds, tag puppet-agent as #{vars[:puppet_agent_release]} and kick off a build at https://jenkins.puppetlabs.com/view/All%20in%20One%20Agent/view/Stable/view/Puppet%20Agent%20Daily/job/platform_aio-suite_stage-intn_stable/build?delay=0sec using the default set of parameters.
-  * Also kick off the manual pipeline at https://jenkins.puppetlabs.com/view/All%20in%20One%20Agent/view/Manual/view/Puppet%20Agent%20Manual%20(stable)/job/platform_aio-suite_stage-intn_stable-nonpool/build for platforms not in vmpooler.
+  * If the build succeeds, tag puppet-agent as #{vars[:puppet_agent_release]} and kick off a build at https://jenkins.puppetlabs.com/view/puppet-agent%20suite%20pipelines/job/platform_puppet-agent_init-van-int_suite-daily-#{vars[:puppet_agent_release]}-release/build?delay=0sec using the default set of parameters.
+  * Notify [~#{vars[:tester]}] that the manual pipeline can be run for final validation on non-vmpooler platforms following the [Confluence instructions|https://confluence.puppetlabs.com/display/ENG/Puppet-Agent+Manual+Pipeline]
+    ** The manual pipeline is likely to be red for a variety of reasons. It is the responsibility of [~#{vars[:tester]}] to shepherd this pipeline and triage any failures. Some segment of testing may need to be completed outside of Jenkins due to OOM-kill issue tracked by BKR-679
   * After the build, packages can be found in builds.delivery.puppetlabs.net/puppet-agent/#{vars[:puppet_agent_release]}
 
 Dependencies:
